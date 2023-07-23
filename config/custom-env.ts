@@ -20,7 +20,8 @@ export default {
     port: process.env.DB_PORT,
   },
   jwtConfig: {
-    jwtSecret: process.env.JWT_SECRET,
+    jwtPublic: process.env.JWT_PUBLIC,
+    jwtPrivate: process.env.JWT_PRIVATE,
     jwtAlgorithm: process.env.JWT_ALGO,
   },
   api: {
