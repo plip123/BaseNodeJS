@@ -6,7 +6,7 @@ const getDbURL = () => {
     case 'mongodb':
       return `mongodb://${config.get('dbConfig.user')}:${config.get(
         'dbConfig.pass'
-      )}@localhost:${config.get('dbConfig.port')}/${config.get(
+      )}@${config.get('dbConfig.host')}:${config.get('dbConfig.port')}/${config.get(
         'dbConfig.name'
       )}?authSource=admin`;
     default:
