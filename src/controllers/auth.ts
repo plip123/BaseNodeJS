@@ -8,12 +8,11 @@ import AppError from '../utils/appError';
 export const excludedFields = ['password'];
 
 // Cookies
-// TODO: reconfig this time
 const accessTokenCookieOptions: CookieOptions = {
   expires: new Date(
-    Date.now() + config.get<number>('jwtConfig.jwtExpires') * 60 * 1000
+    Date.now() + config.get<number>('jwtConfig.jwtExpires') * 3600000
   ),
-  maxAge: config.get<number>('jwtConfig.jwtExpires') * 60 * 1000,
+  maxAge: config.get<number>('jwtConfig.jwtExpires') * 3600000,
   httpOnly: true,
   sameSite: 'lax',
 };
