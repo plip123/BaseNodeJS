@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import config from 'config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import logger from '../config/pino';
+import logger from './loaders/pino';
 
 const app = express();
 

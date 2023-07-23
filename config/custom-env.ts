@@ -12,10 +12,11 @@ if (envFound.error) {
 
 export default {
   dbConfig: {
-    dbURL: process.env.MONGODB_URI,
-    dbName: process.env.MONGODB_DATABASE_NAME,
-    dbUser: process.env.MONGODB_USERNAME,
-    dbPass: process.env.MONGODB_PASSWORD,
+    db: process.env.DB_TYPE,
+    user: process.env.DB_USERNAME,
+    pass: process.env.DB_PASSWORD,
+    name: process.env.DB_NAME,
+    port: process.env.DB_PORT,
   },
   jwtConfig: {
     jwtSecret: process.env.JWT_SECRET,
