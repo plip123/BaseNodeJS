@@ -23,6 +23,7 @@ export default {
     jwtPublic: process.env.JWT_PUBLIC,
     jwtPrivate: process.env.JWT_PRIVATE,
     jwtAlgorithm: process.env.JWT_ALGO,
+    jwtExpires: process.env.JWT_EXPIRES,
   },
   api: {
     prefix: '/api',

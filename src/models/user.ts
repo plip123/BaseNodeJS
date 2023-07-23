@@ -9,10 +9,9 @@ import bcrypt from 'bcryptjs';
 
 @index({ email: 1 })
 @pre<User>('save', async function () {
-  // Hash password if the password is new or was updated
   if (!this.isModified('password')) return;
 
-  // Hash password with costFactor of 12
+  // Hash password
   this.password = await bcrypt.hash(this.password, 12);
 })
 @modelOptions({
@@ -35,7 +34,6 @@ export class User {
   @prop({ default: 'user' })
   role: string;
 
-  // Instance method to check if passwords match
   async comparePasswords(hashedPassword: string, candidatePassword: string) {
     return await bcrypt.compare(candidatePassword, hashedPassword);
   }
