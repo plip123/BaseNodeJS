@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { findAllUsers } from '../services/user';
 import logger from '../loaders/pino';
 

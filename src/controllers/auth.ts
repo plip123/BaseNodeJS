@@ -21,7 +21,7 @@ const accessTokenCookieOptions: CookieOptions = {
 // Only set secure to true in production
 if (process.env.NODE_ENV === 'production') accessTokenCookieOptions.secure = true;
 
-export const registerHandler = async (
+export const register = async (
   req: Request<{}, {}, RegisterUserInput>,
   res: Response,
   next: NextFunction
@@ -54,7 +54,7 @@ export const registerHandler = async (
   }
 };
 
-export const loginHandler = async (
+export const login = async (
   req: Request<{}, {}, LoginUserInput>,
   res: Response,
   next: NextFunction
