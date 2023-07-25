@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { findAllUsers } from '../services/user';
+import logger from '../loaders/pino';
 
 export const getCurrentUser = (
   req: Request,
@@ -8,6 +9,8 @@ export const getCurrentUser = (
 ) => {
   try {
     const user = res.locals.user;
+    logger.info("Success in getting the current user.");
+
     res.status(200).json({
       status: 'success',
       data: {
@@ -15,6 +18,7 @@ export const getCurrentUser = (
       },
     });
   } catch (err: any) {
+    logger.error("ERROR: Error trying to get the current user.");
     next(err);
   }
 };
@@ -26,6 +30,9 @@ export const getAllUsers = async (
 ) => {
   try {
     const users = await findAllUsers();
+
+    logger.info("Success in getting all users.");
+
     res.status(200).json({
       status: 'success',
       result: users.length,
@@ -34,6 +41,7 @@ export const getAllUsers = async (
       },
     });
   } catch (err: any) {
+    logger.error("ERROR: Error trying to get all users.");
     next(err);
   }
 };

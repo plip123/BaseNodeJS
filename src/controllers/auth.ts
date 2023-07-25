@@ -3,6 +3,7 @@ import { Request, Response, NextFunction, CookieOptions } from 'express';
 import { RegisterUserInput, LoginUserInput } from '../schemas/user';
 import { registerUser, findUser, signToken } from '../services/user';
 import AppError from '../utils/appError';
+import logger from '../loaders/pino';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -32,6 +33,8 @@ export const registerHandler = async (
       password: req.body.password,
     });
 
+    logger.info("Successful user registration");
+
     res.status(201).json({
       status: 'success',
       data: {
@@ -39,6 +42,8 @@ export const registerHandler = async (
       },
     });
   } catch (err: any) {
+    logger.error("ERROR: An error occurred while registering a user");
+
     if (err.code === 11000) {
       return res.status(409).json({
         status: 'fail',
@@ -74,6 +79,8 @@ export const loginHandler = async (
       ...accessTokenCookieOptions,
       httpOnly: false,
     });
+    
+    logger.info("Successful user login");
 
     // Send Access Token
     res.status(200).json({
@@ -81,6 +88,7 @@ export const loginHandler = async (
       accessToken,
     });
   } catch (err: any) {
+    logger.error("ERROR: An error occurred while a user was logging in.");
     next(err);
   }
 };

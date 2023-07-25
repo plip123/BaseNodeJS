@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError, AnyZodObject } from 'zod';
+import logger from '../../loaders/pino';
 
 export const validate =
   (schema: AnyZodObject) =>
@@ -14,6 +15,8 @@ export const validate =
       next();
     } catch (err: any) {
       if (err instanceof ZodError) {
+        logger.error("ERROR 400: Zod Validator");
+
         return res.status(400).json({
           status: 'fail',
           error: err.errors,

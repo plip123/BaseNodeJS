@@ -76,6 +76,6 @@ app.listen(port, () => {
 
   connectDB();
 }).on('error', err => {
-  logger.error(err);
+  logger.error("ERROR: Error when try to init the server");
   process.exit(1);
 });

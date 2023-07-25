@@ -1,3 +1,5 @@
+import logger from "../loaders/pino";
+
 export default class AppError extends Error {
   status: string;
   isOperational: boolean;
@@ -6,6 +8,8 @@ export default class AppError extends Error {
     super(message);
     this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
     this.isOperational = true;
+
+    logger.error(`ERROR ${statusCode}: ${message}`);
 
     Error.captureStackTrace(this, this.constructor);
   }
