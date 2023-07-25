@@ -4,6 +4,7 @@ import config from 'config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from './loaders/pino';
+import connectDB from './loaders/db';
 
 const app = express();
 
@@ -39,7 +40,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // Logger
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
-  
 // Testing
 app.get('/healthChecker', (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
@@ -73,6 +73,8 @@ app.listen(port, () => {
     ♦  Server listening on port: ${port} ♦
     ######################################
   `);
+
+  connectDB();
 }).on('error', err => {
   logger.error(err);
   process.exit(1);

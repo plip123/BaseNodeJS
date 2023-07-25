@@ -7,11 +7,32 @@ const envFound = dotenv.config();
 if (envFound.error) {
   // This error should crash whole process
 
-  throw new Error("⚠️ .env file not found  ⚠️");
+  throw new Error("▲ .env file not found ▲");
 }
 
 export default {
   port: parseInt(process.env.PORT ?? "8000", 10),
-  accessTokenExpiresIn: 15,
   origin: process.env.ORIGIN,
+  dbConfig: {
+    db: process.env.DB_TYPE,
+    user: process.env.DB_USERNAME,
+    pass: process.env.DB_PASSWORD,
+    name: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+  },
+  jwtConfig: {
+    jwtPublic: process.env.JWT_PUBLIC,
+    jwtPrivate: process.env.JWT_PRIVATE,
+    jwtAlgorithm: process.env.JWT_ALGO,
+    jwtExpires: process.env.JWT_EXPIRES,
+  },
+  api: {
+    prefix: '/api',
+  },
+  emails: {
+    apiKey: process.env.MAILGUN_API_KEY,
+    apiUsername: process.env.MAILGUN_USERNAME,
+    domain: process.env.MAILGUN_DOMAIN
+  }
 };
