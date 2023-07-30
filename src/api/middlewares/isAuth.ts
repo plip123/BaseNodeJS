@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import AppError from '../../utils/appError';
-import logger from '../../loaders/pino';
+import logger from '../../utils/pino';
 
 export const isAuth = (
   req: Request,

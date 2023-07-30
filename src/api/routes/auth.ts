@@ -1,14 +1,19 @@
-import express from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { loginController, registerController } from '../../controllers/auth';
 import { validate } from '../middlewares';
 import { registerUserSchema, loginUserSchema } from '../../schemas/user';
 
-const router = express.Router();
+const router = Router();
 
-// Register user route
-router.post('/register', validate(registerUserSchema), loginController);
+export default (app: Router) => {
+  app.use('/auth', router);
+  
+  // Register user route
+  router.post('/register', validate(registerUserSchema), registerController);
+  
+  // Login user route
+  router.post('/login', validate(loginUserSchema), loginController);
 
-// Login user route
-router.post('/login', validate(loginUserSchema), registerController);
-
-export default router;
+  // TODO: Logout user route
+  // router.post('/logout', validate)
+};

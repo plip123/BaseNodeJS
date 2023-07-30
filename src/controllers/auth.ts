@@ -3,7 +3,7 @@ import { Request, Response, NextFunction, CookieOptions } from 'express';
 import { RegisterUserInput, LoginUserInput } from '../schemas/user';
 import { registerUser, findUser, signToken } from '../services/user';
 import AppError from '../utils/appError';
-import logger from '../loaders/pino';
+import logger from '../utils/pino';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];

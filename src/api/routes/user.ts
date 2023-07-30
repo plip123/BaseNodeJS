@@ -1,14 +1,18 @@
-import express from 'express';
+import { Router } from 'express';
 import { getAllUsers, getCurrentUser } from '../../controllers/user';
 import { deserializeUser, isAuth, rolePermission } from '../middlewares';
 
-const router = express.Router();
-router.use(deserializeUser, isAuth);
+const router = Router();
 
-// Admin Get All Users route
-router.get('/', rolePermission('admin'), getAllUsers);
+export default (app: Router) => {
+  app.use('/auth', router);
+  
+  router.use(deserializeUser, isAuth);
 
-// Get current user info route
-router.get('/current-user', getCurrentUser);
+  // Admin Get All Users route
+  router.get('/', rolePermission('admin'), getAllUsers);
 
-export default router;
+  // Get current user info route
+  router.get('/current-user', getCurrentUser);
+
+};

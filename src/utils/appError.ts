@@ -1,4 +1,4 @@
-import logger from "../loaders/pino";
+import logger from "./pino";
 
 export default class AppError extends Error {
   status: string;

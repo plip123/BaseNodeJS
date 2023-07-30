@@ -1,6 +1,6 @@
 import config from 'config';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import logger from '../loaders/pino';
+import logger from './pino';
 
 export const signJwt = (payload: Object, options: SignOptions = {}) => {
   const privateKey = Buffer.from(config.get<string>('jwtConfig.jwtPrivate'), 'base64').toString('ascii');

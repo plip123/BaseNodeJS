@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { findAllUsers } from '../services/user';
-import logger from '../loaders/pino';
+import logger from '../utils/pino';
 
 export const getCurrentUser = (
   req: Request,

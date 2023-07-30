@@ -28,7 +28,7 @@ export default {
     jwtExpires: process.env.JWT_EXPIRES,
   },
   api: {
-    prefix: '/api',
+    prefix: process.env.API_PREFIX,
   },
   emails: {
     apiKey: process.env.MAILGUN_API_KEY,

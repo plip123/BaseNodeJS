@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import config from 'config';
-import logger from '../loaders/pino';
+import logger from '../utils/pino';
 
 const getDbURL = () => {
   switch (config.get('dbConfig.db')) {
@@ -20,7 +20,7 @@ const connectDB = async () => {
     const db = getDbURL();
 
     await mongoose.connect(db);
-    logger.info("Connected DB!");
+    logger.info("-- Connected DB!");
   } catch (error) {
     setTimeout(connectDB, 5000);
     logger.error("DB connection failed");

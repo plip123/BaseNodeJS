@@ -2,7 +2,7 @@ import { Request, Response, NextFunction} from 'express';
 import { findUserById } from '../../services/user';
 import AppError from '../../utils/appError';
 import { verifyJwt } from '../../utils/jwt';
-import logger from '../../loaders/pino';
+import logger from '../../utils/pino';
 
 export const deserializeUser = async (
   req: Request,

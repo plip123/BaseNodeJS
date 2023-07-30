@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError, AnyZodObject } from 'zod';
-import logger from '../../loaders/pino';
+import logger from '../../utils/pino';
 
 export const validate =
   (schema: AnyZodObject) =>
