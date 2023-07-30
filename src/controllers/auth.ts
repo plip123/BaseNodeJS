@@ -73,6 +73,8 @@ export const loginController = async (
     // Create Access Token
     const { accessToken } = await signToken(user);
 
+    logger.info("Access token created");
+
     // Send Access Token in Cookie
     res.cookie('accessToken', accessToken, accessTokenCookieOptions);
     res.cookie('logged_in', true, {
