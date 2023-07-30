@@ -15,5 +15,14 @@ export default (app: Router) => {
   router.post('/login', validate(loginUserSchema), loginController);
 
   // TODO: Logout user route
-  // router.post('/logout', validate)
+  // router.post('/logout', validate);
+
+  // TODO: Reset password
+  // router.post('/reset-password', validate);
+
+  // TODO: Confirm account
+  // router.post('/confirm-account', validate);
+
+  // TODO: New password
+  // router.post('/new-password', validate);
 };

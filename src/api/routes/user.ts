@@ -13,6 +13,6 @@ export default (app: Router) => {
   router.get('/', getCurrentUser);
   
   // Admin Get All Users route
-  router.get('/all-user', rolePermission('admin'), getAllUsers);
+  router.get('/all', rolePermission('admin'), getAllUsers);
 
 };
