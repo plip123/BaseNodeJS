@@ -10,12 +10,12 @@ This repository requires some knowledge of:
 1. Install dependencies:
 
 ```bash
-$ npm i
+npm i
 ```
 or
 
 ```bash
-$ yarn
+yarn
 ```
 
 ## Usage
