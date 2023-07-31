@@ -20,7 +20,7 @@ const connectDB = async () => {
     const db = getDbURL();
 
     await mongoose.connect(db);
-    logger.info("-- Connected DB!");
+    logger.info("-- DB Connected!");
   } catch (error) {
     setTimeout(connectDB, 5000);
     logger.error("DB connection failed");

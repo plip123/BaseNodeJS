@@ -1,0 +1,108 @@
+paths:
+    /api/auth/register:
+        post:
+            tags:
+                - Auth
+            summary: Register user
+            description: Create user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - name
+                                - email
+                                - password
+                                - passwordConfirm
+                            properties:
+                                name:
+                                    type: string
+                                    example: 'Bob'
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+                                password:
+                                    type: string
+                                    example: 'example_123'
+                                passwordConfirm:
+                                    type: string
+                                    example: 'example_123'
+            responses:
+                '200':
+                    description: Registered user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    data:
+                                        type: object
+                                        example: { user: { name: 'Bob', email: 'bob@email.com', role: 'user', _id: '64c6fc8b971fcf864744a3aa', createdAt: '2023-07-31T00:12:59.192Z', updatedAt: '2023-07-31T00:12:59.192Z' } }
+                '409':
+                    description: Failure to register an user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Email already exist'
+
+    /api/auth/login:
+        post:
+            tags:
+                - Auth
+            summary: Login user
+            description: Login user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - password
+                            properties:
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+                                password:
+                                    type: string
+                                    example: 'example_123'
+            responses:
+                '200':
+                    description: Registered user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    accessToken:
+                                        type: string
+                                        example: '4CceS5T0k3n'
+                '401':
+                    description: Failure to login
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Invalid Email or Password'
