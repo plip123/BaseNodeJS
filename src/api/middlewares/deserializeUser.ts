@@ -30,10 +30,7 @@ export const deserializeUser = async (
 
     if (!decoded) {
       return next(new AppError(`Invalid token or user doesn't exist`, 401));
-    }
-
-    console.log("----- USER DECODED -----", decoded);
-    
+    }    
 
     // Check if user still exist
     const user = await findUserById(decoded.sub);

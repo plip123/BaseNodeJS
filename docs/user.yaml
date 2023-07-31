@@ -1,0 +1,107 @@
+paths:
+    /api/user:
+        get:
+            security:
+                - jwt: []
+            tags:
+                - User
+            summary: Get user data
+            description: Get current user data
+            responses:
+                '200':
+                    description: User data
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        type: object
+                                        example:
+                                            {
+                                                user:
+                                                    {
+                                                        _id: '1',
+                                                        name: 'Bob',
+                                                        email: 'bob@email.com',
+                                                        role: 'user',
+                                                        createdAt: '2023-07-30T03:22:24.833Z',
+                                                        updatedAt: '2023-07-30T03:22:24.833Z',
+                                                        __v: 0,
+                                                    },
+                                            }
+                '401':
+                    description: Failure to register an user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'fail'
+                                    message:
+                                        type: string
+                                        example: 'Invalid token or user does not exist'
+
+    /api/user/all:
+        get:
+            security:
+                - jwt: []
+            tags:
+                - User
+            summary: Get all users
+            description: Get all users data
+            responses:
+                '200':
+                    description: All users
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        type: object
+                                        example:
+                                            {
+                                                user:
+                                                    [
+                                                        {
+                                                            _id: '1',
+                                                            name: 'Bob',
+                                                            email: 'bob@email.com',
+                                                            role: 'user',
+                                                            createdAt: '2023-07-30T03:22:24.833Z',
+                                                            updatedAt: '2023-07-30T03:22:24.833Z',
+                                                            __v: 0,
+                                                        },
+                                                        {
+                                                            _id: '2',
+                                                            name: 'Alice',
+                                                            email: 'alice@email.com',
+                                                            role: 'user',
+                                                            createdAt: '2023-07-31T03:22:24.833Z',
+                                                            updatedAt: '2023-07-31T03:22:24.833Z',
+                                                            __v: 0,
+                                                        },
+                                                    ],
+                                            }
+                '403':
+                    description: Failure to register an user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: 'fail'
+                                    message:
+                                        type: string
+                                        example: 'You are not allowed to perform this action'
