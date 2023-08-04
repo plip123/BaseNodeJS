@@ -30,9 +30,12 @@ export default {
   api: {
     prefix: process.env.API_PREFIX,
   },
-  emails: {
-    apiKey: process.env.MAILGUN_API_KEY,
-    apiUsername: process.env.MAILGUN_USERNAME,
-    domain: process.env.MAILGUN_DOMAIN
+  mail: {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    tls: process.env.SMTP_TLS,
+    username: process.env.SMTP_USERNAME,
+    password: process.env.SMTP_PASSWORD,
+    sender: process.env.SMTP_SENDER,
   }
 };

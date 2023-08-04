@@ -2,6 +2,9 @@ import express from 'express';
 import config from 'config';
 import logger from './utils/pino';
 
+import MailService from './services/mailer';
+import template from './templates/auth/resetPassword';
+
 async function startServer() {
   const app = express();
 
@@ -10,7 +13,7 @@ async function startServer() {
   // Init loaders
   await require('./loaders').default({ app });
 
-  app.listen(port, () => {
+  app.listen(port, async () => {
     logger.info(`
       ######################################
       ♦  Server listening on port: ${port} ♦
