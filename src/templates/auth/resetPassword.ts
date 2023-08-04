@@ -166,7 +166,7 @@ const resetPassword = (url: string) => {
   <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
   <tr>
   <td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
-  <div align="center" class="alignment" style="line-height:10px"><img alt="Company Logo" src="/public/images/logo_password_header.png" style="display: block; height: auto; border: 0; max-width: 147.33333333333331px; width: 100%;" title="Company Logo" width="147.33333333333331"/></div>
+  <div align="center" class="alignment" style="line-height:10px"><img alt="Company Logo" src="cid:logo_password_header" style="display: block; height: auto; border: 0; max-width: 147.33333333333331px; width: 100%;" title="Company Logo" width="147.33333333333331"/></div>
   </td>
   </tr>
   </table>
@@ -209,7 +209,7 @@ const resetPassword = (url: string) => {
   <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
   <tr>
   <td class="pad" style="width:100%;">
-  <div align="center" class="alignment" style="line-height:10px"><img alt="Top round corners" src="/public/images/round_corner_top.png" style="display: block; height: auto; border: 0; max-width: 680px; width: 100%;" title="Top round corners" width="680"/></div>
+  <div align="center" class="alignment" style="line-height:10px"><img alt="Top round corners" src="cid:round_corner_top" style="display: block; height: auto; border: 0; max-width: 680px; width: 100%;" title="Top round corners" width="680"/></div>
   </td>
   </tr>
   </table>
@@ -232,7 +232,7 @@ const resetPassword = (url: string) => {
   <table border="0" cellpadding="15" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
   <tr>
   <td class="pad">
-  <div align="center" class="alignment" style="line-height:10px"><img alt="Resetting Password" class="fullWidth" src="/public/images/password_reset.png" style="display: block; height: auto; border: 0; max-width: 374px; width: 100%;" title="Resetting Password" width="374"/></div>
+  <div align="center" class="alignment" style="line-height:10px"><img alt="Resetting Password" class="fullWidth" src="cid:password_reset" style="display: block; height: auto; border: 0; max-width: 374px; width: 100%;" title="Resetting Password" width="374"/></div>
   </td>
   </tr>
   </table>
@@ -305,7 +305,7 @@ const resetPassword = (url: string) => {
   <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
   <tr>
   <td class="pad" style="width:100%;">
-  <div align="center" class="alignment" style="line-height:10px"><img alt="Bottom round corners" src="/public/images/round_corner_bottom.png" style="display: block; height: auto; border: 0; max-width: 680px; width: 100%;" title="Bottom round corners" width="680"/></div>
+  <div align="center" class="alignment" style="line-height:10px"><img alt="Bottom round corners" src="cid:round_corner_bottom" style="display: block; height: auto; border: 0; max-width: 680px; width: 100%;" title="Bottom round corners" width="680"/></div>
   </td>
   </tr>
   </table>
@@ -332,10 +332,10 @@ const resetPassword = (url: string) => {
   <div align="center" class="alignment">
   <table border="0" cellpadding="0" cellspacing="0" class="social-table" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;" width="144px">
   <tr>
-  <td style="padding:0 2px 0 2px;"><a href="https://www.facebook.com" target="_blank"><img alt="Facebook" height="32" src="/public/images/facebook2x.png" style="display: block; height: auto; border: 0;" title="facebook" width="32"/></a></td>
-  <td style="padding:0 2px 0 2px;"><a href="https://www.twitter.com" target="_blank"><img alt="Twitter" height="32" src="/public/images/twitter2x.png" style="display: block; height: auto; border: 0;" title="twitter" width="32"/></a></td>
-  <td style="padding:0 2px 0 2px;"><a href="https://www.linkedin.com" target="_blank"><img alt="Linkedin" height="32" src="/public/images/linkedin2x.png" style="display: block; height: auto; border: 0;" title="linkedin" width="32"/></a></td>
-  <td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com" target="_blank"><img alt="Instagram" height="32" src="/public/images/instagram2x.png" style="display: block; height: auto; border: 0;" title="instagram" width="32"/></a></td>
+  <td style="padding:0 2px 0 2px;"><a href="https://www.facebook.com" target="_blank"><img alt="Facebook" height="32" src="cid:facebook" style="display: block; height: auto; border: 0;" title="facebook" width="32"/></a></td>
+  <td style="padding:0 2px 0 2px;"><a href="https://www.twitter.com" target="_blank"><img alt="Twitter" height="32" src="cid:twitter" style="display: block; height: auto; border: 0;" title="twitter" width="32"/></a></td>
+  <td style="padding:0 2px 0 2px;"><a href="https://www.linkedin.com" target="_blank"><img alt="Linkedin" height="32" src="cid:linkedin" style="display: block; height: auto; border: 0;" title="linkedin" width="32"/></a></td>
+  <td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com" target="_blank"><img alt="Instagram" height="32" src="cid:instagram" style="display: block; height: auto; border: 0;" title="instagram" width="32"/></a></td>
   </tr>
   </table>
   </div>
@@ -430,9 +430,53 @@ const resetPassword = (url: string) => {
       Use this URL to reset your password ${url}
   `;
 
+  const attachments = [
+    {
+      filename: 'logo_password_header.png',
+      path: '/public/images/logo_password_header.png',
+      cid: 'logo_password_header',
+    },
+    {
+      filename: 'facebook2x.png',
+      path: '/public/images/facebook2x.png',
+      cid: 'facebook',
+    },
+    {
+      filename: 'linkedin2x.png',
+      path: '/public/images/linkedin2x.png',
+      cid: 'linkedin',
+    },
+    {
+      filename: 'twitter2x.png',
+      path: '/public/images/twitter2x.png',
+      cid: 'twitter',
+    },
+    {
+      filename: 'instagram2x.png',
+      path: '/public/images/instagram2x.png',
+      cid: 'instagram',
+    },
+    {
+      filename: 'round_corner_top.png',
+      path: '/public/images/round_corner_top.png',
+      cid: 'round_corner_top',
+    },
+    {
+      filename: 'password_reset.png',
+      path: '/public/images/password_reset.png',
+      cid: 'password_reset',
+    },
+    {
+      filename: 'round_corner_bottom.png',
+      path: '/public/images/round_corner_bottom.png',
+      cid: 'round_corner_bottom',
+    },
+  ];
+
   return {
     html,
     text,
+    attachments,
   };
 };
 

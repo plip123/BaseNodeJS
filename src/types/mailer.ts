@@ -1,3 +1,5 @@
+import { SendMailOptions } from 'nodemailer'
+
 export interface IMail {
   from?: string;
   to: string | string[];
@@ -6,4 +8,5 @@ export interface IMail {
   subject: string;
   text?: string;
   html: string;
+  attachments?: SendMailOptions["attachments"];
 };
