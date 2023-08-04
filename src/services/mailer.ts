@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import config from 'config';
-import { IMail } from '@/types';
-import Logger from '@/utils/pino';
+import { IMail } from '../types';
+import Logger from '../utils/pino';
 
 export default class Mailer {
   private static instance: Mailer;
@@ -42,7 +42,7 @@ export default class Mailer {
   ) {
     return await this.transporter
       .sendMail({ 
-        from: process.env.SMTP_SENDER ?? options.from,
+        from: config.get<string>('mail.sender') ?? options.from,
         to: options.to,
         cc: options.cc,
         bcc: options.bcc,
@@ -68,11 +68,11 @@ export default class Mailer {
 
   /// Verify Mailer Connection
   async verifyConnection() {
-    return this.transporter.verify(function (error, success) {
+    this.transporter.verify(function (error, success) {
       if (error) {
-        Logger.error(error.message);
+        Logger.error(`ERROR: ${error.message}`);
       } else {
-        Logger.info('Server is ready to take our messages');
+        Logger.info('Server is ready to send emails');
       }
     });
   };
