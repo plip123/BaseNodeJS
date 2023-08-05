@@ -6,33 +6,38 @@ import userModel, { User } from '../models/user';
 import { excludedFields } from '../controllers/auth';
 import { signJwt } from '../utils/jwt';
 
-// RegisterUser service
-export const registerUser = async (input: Partial<User>) => {
+// Create user service
+export const createUserService = async (input: Partial<User>) => {
   const user = await userModel.create(input);
   return omit(user.toJSON(), excludedFields);
 };
 
 // Find User by ID
-export const findUserById = async (id: string) => {
+export const findUserByIdService = async (id: string) => {
   const user = await userModel.findById(id).lean();
   return omit(user, excludedFields);
 };
 
 // Find All users
-export const findAllUsers = async () => {
+export const findAllUsersService = async () => {
   return await userModel.find();
 };
 
 // Find an user by any fields
-export const findUser = async (
+export const findUserService = async (
   query: FilterQuery<User>,
   options: QueryOptions = {}
 ) => {
   return await userModel.findOne(query, {}, options).select('+password');
 };
 
+// Update User
+export const updateUserService = async (input: Partial<User>) => {
+  return await userModel.updateOne(input);
+};
+
 // Sign Token
-export const signToken = async (user: DocumentType<User>) => {
+export const signTokenService = async (user: DocumentType<User>) => {
   // Sign the access token
   const accessToken = signJwt(
     { sub: user._id },

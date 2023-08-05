@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
   loginController,
   registerController,
-  forgotPassword
+  forgotPasswordController,
+  resetPasswordController,
 } from '../../controllers/auth';
 import { validate } from '../middlewares';
 import {
@@ -24,10 +25,10 @@ export default (app: Router) => {
   router.post('/login', validate(loginUserSchema), loginController);
   
   // Forgot password route
-  router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
+  router.post('/forgot-password', validate(forgotPasswordSchema), forgotPasswordController);
 
   // Reset user password route
-  router.post('/reset-password', validate(resetPasswordSchema), );
+  router.post('/reset-password', validate(resetPasswordSchema), resetPasswordController);
 
   // TODO: Logout user route
   // router.post('/logout', validate);

@@ -3,9 +3,10 @@ import { Request, Response, NextFunction, CookieOptions } from 'express';
 import {
   RegisterUserInput,
   LoginUserInput,
-  ForgotPasswordInput
+  ForgotPasswordInput,
+  ResetPasswordSchema,
 } from '../schemas/user';
-import { registerUser, findUser, signToken } from '../services/user';
+import { createUserService, findUserService, updateUserService, signTokenService } from '../services/user';
 import Mailer from '../services/mailer';
 import EmailTemplates from '../templates/index';
 import AppError from '../utils/appError';
@@ -33,7 +34,7 @@ export const registerController = async (
   next: NextFunction
 ) => {
   try {
-    const user = await registerUser({
+    const user = await createUserService({
       email: req.body.email,
       name: req.body.name,
       password: req.body.password,
@@ -67,7 +68,7 @@ export const loginController = async (
 ) => {
   try {
     // Get the user
-    const user = await findUser({ email: req.body.email });
+    const user = await findUserService({ email: req.body.email });
 
     if (
       !user ||
@@ -77,7 +78,7 @@ export const loginController = async (
     }
 
     // Create Access Token
-    const { accessToken } = await signToken(user);
+    const { accessToken } = await signTokenService(user);
 
     logger.info("Access token created");
 
@@ -101,21 +102,21 @@ export const loginController = async (
   }
 };
 
-export const forgotPassword = async (
+export const forgotPasswordController = async (
   req: Request<{}, {}, ForgotPasswordInput>,
   res: Response,
   next: NextFunction
 ) => {
   try {
     // Get the user
-    const user = await findUser({ email: req.body.email });
+    const user = await findUserService({ email: req.body.email });
 
     if (!user) {
       return next(new AppError('Invalid Email', 401));
     }
 
     // Create Access Token
-    const { accessToken } = await signToken(user);
+    const { accessToken } = await signTokenService(user);
     const url = `${req.headers['x-forwarded-proto']}://${req.headers.host}/recover-password/${accessToken}`;
 
     // Send forgot password email
@@ -139,6 +140,50 @@ export const forgotPassword = async (
       status: 'fail',
       message: err.message,
     });
+    next(err);
+  }
+};
+
+export const resetPasswordController = async (
+  req: Request<{}, {}, ResetPasswordSchema>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await updateUserService({
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    logger.info("Successful updated user");
+
+    // Send password changed email
+    const mailer = Mailer.getInstance();
+    const template = EmailTemplates.genericEmail({
+      title: 'Password successfully changed',
+      message: 'Your password was successfully updated. If you did not perform this action please contact our team.',
+    });
+    await mailer.send(String(req.headers['X-Request-Id']), {
+        to: req.body.email,
+        subject: 'Reset Password',
+        html: template.html,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while registering a user");
+
+    if (err.code === 11000) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'Email already exist',
+      });
+    }
     next(err);
   }
 };
