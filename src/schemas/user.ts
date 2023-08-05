@@ -28,5 +28,27 @@ export const loginUserSchema = object({
   }),
 });
 
+export const forgotPasswordSchema = object({
+  body: object({
+    email: string({ required_error: 'Email is required' }).email(
+      'Invalid Email'
+    ),
+  }),
+});
+
+export const resetPasswordSchema = object({
+  body: object({
+    email: string({ required_error: 'Email is required' }).email(
+      'Invalid Email'
+    ),
+    password: string({ required_error: 'Password is required' })
+      .min(8, 'Password must be more than 8 characters')
+      .max(32, 'Password must be less than 32 characters'),
+    passwordConfirm: string({ required_error: 'Please confirm your password' }),
+  }),
+});
+
 export type RegisterUserInput = TypeOf<typeof registerUserSchema>['body'];
 export type LoginUserInput = TypeOf<typeof loginUserSchema>['body'];
+export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>['body'];
+export type ResetPasswordSchema = TypeOf<typeof resetPasswordSchema>['body'];

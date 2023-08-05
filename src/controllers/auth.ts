@@ -1,7 +1,13 @@
 import config from 'config';
 import { Request, Response, NextFunction, CookieOptions } from 'express';
-import { RegisterUserInput, LoginUserInput } from '../schemas/user';
+import {
+  RegisterUserInput,
+  LoginUserInput,
+  ForgotPasswordInput
+} from '../schemas/user';
 import { registerUser, findUser, signToken } from '../services/user';
+import Mailer from '../services/mailer';
+import EmailTemplates from '../templates/index';
 import AppError from '../utils/appError';
 import logger from '../utils/pino';
 
@@ -91,6 +97,48 @@ export const loginController = async (
     });
   } catch (err: any) {
     logger.error("ERROR: An error occurred while a user was logging in.");
+    next(err);
+  }
+};
+
+export const forgotPassword = async (
+  req: Request<{}, {}, ForgotPasswordInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUser({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    // Create Access Token
+    const { accessToken } = await signToken(user);
+    const url = `${req.headers['x-forwarded-proto']}://${req.headers.host}/recover-password/${accessToken}`;
+
+    // Send forgot password email
+    const mailer = Mailer.getInstance();
+    const template = EmailTemplates.resetPassword(url);
+    await mailer.send(String(req.headers['X-Request-Id']), {
+        to: req.body.email,
+        subject: 'Reset Password',
+        html: template.html,
+        attachments: template.attachments,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: {},
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while recover password");
+
+    return res.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
     next(err);
   }
 };
