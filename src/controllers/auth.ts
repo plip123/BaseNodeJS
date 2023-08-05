@@ -127,6 +127,8 @@ export const forgotPasswordController = async (
     // Create Access Token
     const { accessToken } = await resetPasswordTokenService(user);
     const url = `${req.headers['x-forwarded-proto']}://${req.headers.host}/recover-password/${accessToken}`;
+    
+    logger.info(`Url to send: ${url}`);
 
     // Send forgot password email
     const mailer = Mailer.getInstance();
