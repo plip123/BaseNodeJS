@@ -49,3 +49,17 @@ export const signTokenService = async (user: DocumentType<User>) => {
   // Return access token
   return { accessToken };
 };
+
+// Reset Password Token
+export const resetPasswordTokenService = async (user: DocumentType<User>) => {
+  // Sign the access token
+  const accessToken = signJwt(
+    { sub: user._id },
+    {
+      expiresIn: 600000, // 10min
+    }
+  );
+
+  // Return access token
+  return { accessToken };
+};

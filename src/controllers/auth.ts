@@ -1,12 +1,19 @@
 import config from 'config';
 import { Request, Response, NextFunction, CookieOptions } from 'express';
+import bcrypt from 'bcryptjs';
 import {
   RegisterUserInput,
   LoginUserInput,
   ForgotPasswordInput,
   ResetPasswordSchema,
 } from '../schemas/user';
-import { createUserService, findUserService, updateUserService, signTokenService } from '../services/user';
+import {
+  createUserService,
+  findUserService,
+  updateUserService,
+  signTokenService,
+  resetPasswordTokenService
+} from '../services/user';
 import Mailer from '../services/mailer';
 import EmailTemplates from '../templates/index';
 import AppError from '../utils/appError';
@@ -116,7 +123,7 @@ export const forgotPasswordController = async (
     }
 
     // Create Access Token
-    const { accessToken } = await signTokenService(user);
+    const { accessToken } = await resetPasswordTokenService(user);
     const url = `${req.headers['x-forwarded-proto']}://${req.headers.host}/recover-password/${accessToken}`;
 
     // Send forgot password email
@@ -134,12 +141,7 @@ export const forgotPasswordController = async (
       data: {},
     });
   } catch (err: any) {
-    logger.error("ERROR: An error occurred while recover password");
-
-    return res.status(500).json({
-      status: 'fail',
-      message: err.message,
-    });
+    logger.error("ERROR: An error occurred while recover password.");
     next(err);
   }
 };
@@ -150,10 +152,19 @@ export const resetPasswordController = async (
   next: NextFunction
 ) => {
   try {
-    const user = await updateUserService({
-      email: req.body.email,
-      password: req.body.password,
-    });
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    user.email = req.body.email;
+    user.password = await bcrypt.hash(req.body.password, 12);
+
+    console.log("USER", user);
+
+    await updateUserService(user);
 
     logger.info("Successful updated user");
 
@@ -165,7 +176,7 @@ export const resetPasswordController = async (
     });
     await mailer.send(String(req.headers['X-Request-Id']), {
         to: req.body.email,
-        subject: 'Reset Password',
+        subject: 'Password changed',
         html: template.html,
     });
 
@@ -176,14 +187,7 @@ export const resetPasswordController = async (
       },
     });
   } catch (err: any) {
-    logger.error("ERROR: An error occurred while registering a user");
-
-    if (err.code === 11000) {
-      return res.status(409).json({
-        status: 'fail',
-        message: 'Email already exist',
-      });
-    }
+    logger.error("ERROR: An error occurred while recover password.");
     next(err);
   }
 };
