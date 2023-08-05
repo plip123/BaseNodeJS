@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { findAllUsers } from '../services/user';
+import { findAllUsersService } from '../services/user';
 import logger from '../utils/pino';
 
 export const getCurrentUser = (
@@ -29,7 +29,7 @@ export const getAllUsers = async (
   next: NextFunction
 ) => {
   try {
-    const users = await findAllUsers();
+    const users = await findAllUsersService();
 
     logger.info("Success in getting all users.");
 

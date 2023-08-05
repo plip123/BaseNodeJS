@@ -4,13 +4,15 @@ import {
   registerController,
   forgotPasswordController,
   resetPasswordController,
+  verifyAccessTokenController,
 } from '../../controllers/auth';
 import { validate } from '../middlewares';
 import {
   registerUserSchema,
   loginUserSchema,
   forgotPasswordSchema,
-  resetPasswordSchema
+  resetPasswordSchema,
+  verifyAccessTokenSchema,
 } from '../../schemas/user';
 
 const router = Router();
@@ -26,6 +28,9 @@ export default (app: Router) => {
   
   // Forgot password route
   router.post('/forgot-password', validate(forgotPasswordSchema), forgotPasswordController);
+
+  // Verify access token
+  router.post('/verify-token', validate(verifyAccessTokenSchema), verifyAccessTokenController);
 
   // Reset user password route
   router.post('/reset-password', validate(resetPasswordSchema), resetPasswordController);

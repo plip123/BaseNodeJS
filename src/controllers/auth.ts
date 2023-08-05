@@ -5,7 +5,8 @@ import {
   RegisterUserInput,
   LoginUserInput,
   ForgotPasswordInput,
-  ResetPasswordSchema,
+  ResetPasswordInput,
+  VerifyAccessTokenInput,
 } from '../schemas/user';
 import {
   createUserService,
@@ -18,6 +19,7 @@ import Mailer from '../services/mailer';
 import EmailTemplates from '../templates/index';
 import AppError from '../utils/appError';
 import logger from '../utils/pino';
+import { verifyJwt } from '../utils/jwt';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -146,8 +148,39 @@ export const forgotPasswordController = async (
   }
 };
 
+export const verifyAccessTokenController = async (
+  req: Request<{}, {}, VerifyAccessTokenInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    if (!verifyJwt(req.body.token)) {
+      return next(new AppError('Invalid Access Token', 401));
+    }
+
+    logger.info("Successful token verification");
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while verifed the access token");
+    next(err);
+  }
+};
+
 export const resetPasswordController = async (
-  req: Request<{}, {}, ResetPasswordSchema>,
+  req: Request<{}, {}, ResetPasswordInput>,
   res: Response,
   next: NextFunction
 ) => {
@@ -164,7 +197,7 @@ export const resetPasswordController = async (
 
     console.log("USER", user);
 
-    await updateUserService(user);
+    console.log("USER UPDATED", await updateUserService(user));
 
     logger.info("Successful updated user");
 
@@ -182,9 +215,7 @@ export const resetPasswordController = async (
 
     res.status(201).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: {},
     });
   } catch (err: any) {
     logger.error("ERROR: An error occurred while recover password.");
