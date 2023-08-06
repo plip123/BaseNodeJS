@@ -126,7 +126,7 @@ export const forgotPasswordController = async (
 
     // Create Access Token
     const { accessToken } = await resetPasswordTokenService(user);
-    const url = `${req.headers['x-forwarded-proto']}://${req.headers.host}/recover-password/${accessToken}`;
+    const url = `${req.headers['x-forwarded-proto'] ?? "http"}://${req.headers.host}/recover-password/${accessToken}`;
     
     logger.info(`Url to send: ${url}`);
 
@@ -197,9 +197,7 @@ export const resetPasswordController = async (
     user.email = req.body.email;
     user.password = await bcrypt.hash(req.body.password, 12);
 
-    console.log("USER", user);
-
-    console.log("USER UPDATED", await updateUserService(user));
+    await updateUserService(user);
 
     logger.info("Successful updated user");
 

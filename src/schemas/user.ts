@@ -38,13 +38,17 @@ export const forgotPasswordSchema = object({
 
 export const resetPasswordSchema = object({
   body: object({
+    token: string({ required_error: 'Token is required' }),
     email: string({ required_error: 'Email is required' }).email(
       'Invalid Email'
     ),
     password: string({ required_error: 'Password is required' })
       .min(8, 'Password must be more than 8 characters')
       .max(32, 'Password must be less than 32 characters'),
-    passwordConfirm: string({ required_error: 'Please confirm your password' }),
+      passwordConfirm: string({ required_error: 'Please confirm your password' }),
+  }).refine((data) => data.password === data.passwordConfirm, {
+      path: ['passwordConfirm'],
+      message: 'Passwords do not match',
   }),
 });
 
