@@ -106,3 +106,153 @@ paths:
                                     message:
                                         type: string
                                         example: 'Invalid Email or Password'
+
+    /api/auth/forgot-password:
+        post:
+            tags:
+                - Auth
+            summary: Forgot password
+            description: Send an email with the page to reset password.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+            responses:
+                '200':
+                    description: Sent email to reset password.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    data:
+                                        type: object
+                                        example: {}
+                '401':
+                    description: Failure to reset password.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Invalid Email'
+
+    /api/auth/verify-token:
+        post:
+            tags:
+                - Auth
+            summary: Verify Access Token
+            description: Verify if the access token is valid.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+                                token:
+                                    type: string
+                                    example: '4CceS5T0k3n'
+            responses:
+                '200':
+                    description: Token Access is valid.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    data:
+                                        type: object
+                                        example: {}
+                '401':
+                    description: Invalid Access Token.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Invalid Access Token'
+
+    /api/auth/reset-password:
+        post:
+            tags:
+                - Auth
+            summary: Reset Password
+            description: Reset Password from forgot password endpoint.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+                                token:
+                                    type: string
+                                    example: '4CceS5T0k3n'
+                                password:
+                                    type: string
+                                    example: 'example_123'
+                                passwordConfirm:
+                                    type: string
+                                    example: 'example_123'
+            responses:
+                '200':
+                    description: Password changed.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    data:
+                                        type: object
+                                        example: {}
+                '401':
+                    description: Invalid Access Token.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Invalid Access Token'

@@ -171,9 +171,7 @@ export const verifyAccessTokenController = async (
 
     res.status(201).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: {},
     });
   } catch (err: any) {
     logger.error("ERROR: An error occurred while verifed the access token");
@@ -194,7 +192,10 @@ export const resetPasswordController = async (
       return next(new AppError('Invalid Email', 401));
     }
 
-    user.email = req.body.email;
+    if (!verifyJwt(req.body.token)) {
+      return next(new AppError('Invalid Access Token', 401));
+    }
+
     user.password = await bcrypt.hash(req.body.password, 12);
 
     await updateUserService(user);
