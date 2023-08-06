@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from 'express';
-import { findUserById } from '../../services/user';
+import { findUserByIdService } from '../../services/user';
 import AppError from '../../utils/appError';
 import { verifyJwt } from '../../utils/jwt';
 import logger from '../../utils/pino';
@@ -33,7 +33,7 @@ export const deserializeUser = async (
     }    
 
     // Check if user still exist
-    const user = await findUserById(decoded.sub);
+    const user = await findUserByIdService(decoded.sub);
 
     if (!user) {
       return next(new AppError(`User with that token no longer exist`, 401));

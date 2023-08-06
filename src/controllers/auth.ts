@@ -1,9 +1,25 @@
 import config from 'config';
 import { Request, Response, NextFunction, CookieOptions } from 'express';
-import { RegisterUserInput, LoginUserInput } from '../schemas/user';
-import { registerUser, findUser, signToken } from '../services/user';
+import bcrypt from 'bcryptjs';
+import {
+  RegisterUserInput,
+  LoginUserInput,
+  ForgotPasswordInput,
+  ResetPasswordInput,
+  VerifyAccessTokenInput,
+} from '../schemas/user';
+import {
+  createUserService,
+  findUserService,
+  updateUserService,
+  signTokenService,
+  resetPasswordTokenService
+} from '../services/user';
+import Mailer from '../services/mailer';
+import EmailTemplates from '../templates/index';
 import AppError from '../utils/appError';
 import logger from '../utils/pino';
+import { verifyJwt } from '../utils/jwt';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -27,7 +43,7 @@ export const registerController = async (
   next: NextFunction
 ) => {
   try {
-    const user = await registerUser({
+    const user = await createUserService({
       email: req.body.email,
       name: req.body.name,
       password: req.body.password,
@@ -61,7 +77,7 @@ export const loginController = async (
 ) => {
   try {
     // Get the user
-    const user = await findUser({ email: req.body.email });
+    const user = await findUserService({ email: req.body.email });
 
     if (
       !user ||
@@ -71,7 +87,7 @@ export const loginController = async (
     }
 
     // Create Access Token
-    const { accessToken } = await signToken(user);
+    const { accessToken } = await signTokenService(user);
 
     logger.info("Access token created");
 
@@ -91,6 +107,119 @@ export const loginController = async (
     });
   } catch (err: any) {
     logger.error("ERROR: An error occurred while a user was logging in.");
+    next(err);
+  }
+};
+
+export const forgotPasswordController = async (
+  req: Request<{}, {}, ForgotPasswordInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    // Create Access Token
+    const { accessToken } = await resetPasswordTokenService(user);
+    const url = `${req.headers['x-forwarded-proto'] ?? "http"}://${req.headers.host}/recover-password/${accessToken}`;
+    
+    logger.info(`Url to send: ${url}`);
+
+    // Send forgot password email
+    const mailer = Mailer.getInstance();
+    const template = EmailTemplates.resetPassword(url);
+    await mailer.send(String(req.headers['X-Request-Id']), {
+        to: req.body.email,
+        subject: 'Reset Password',
+        html: template.html,
+        attachments: template.attachments,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: {},
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while recover password.");
+    next(err);
+  }
+};
+
+export const verifyAccessTokenController = async (
+  req: Request<{}, {}, VerifyAccessTokenInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    if (!verifyJwt(req.body.token)) {
+      return next(new AppError('Invalid Access Token', 401));
+    }
+
+    logger.info("Successful token verification");
+
+    res.status(201).json({
+      status: 'success',
+      data: {},
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while verifed the access token");
+    next(err);
+  }
+};
+
+export const resetPasswordController = async (
+  req: Request<{}, {}, ResetPasswordInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    if (!verifyJwt(req.body.token)) {
+      return next(new AppError('Invalid Access Token', 401));
+    }
+
+    user.password = await bcrypt.hash(req.body.password, 12);
+
+    await updateUserService(user);
+
+    logger.info("Successful updated user");
+
+    // Send password changed email
+    const mailer = Mailer.getInstance();
+    const template = EmailTemplates.genericEmail({
+      title: 'Password successfully changed',
+      message: 'Your password was successfully updated. If you did not perform this action please contact our team.',
+    });
+    await mailer.send(String(req.headers['X-Request-Id']), {
+        to: req.body.email,
+        subject: 'Password changed',
+        html: template.html,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: {},
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while recover password.");
     next(err);
   }
 };

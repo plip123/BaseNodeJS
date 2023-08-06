@@ -1,7 +1,19 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { loginController, registerController } from '../../controllers/auth';
+import { Router } from 'express';
+import {
+  loginController,
+  registerController,
+  forgotPasswordController,
+  resetPasswordController,
+  verifyAccessTokenController,
+} from '../../controllers/auth';
 import { validate } from '../middlewares';
-import { registerUserSchema, loginUserSchema } from '../../schemas/user';
+import {
+  registerUserSchema,
+  loginUserSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  verifyAccessTokenSchema,
+} from '../../schemas/user';
 
 const router = Router();
 
@@ -13,16 +25,19 @@ export default (app: Router) => {
   
   // Login user route
   router.post('/login', validate(loginUserSchema), loginController);
+  
+  // Forgot password route
+  router.post('/forgot-password', validate(forgotPasswordSchema), forgotPasswordController);
+
+  // Verify access token
+  router.post('/verify-token', validate(verifyAccessTokenSchema), verifyAccessTokenController);
+
+  // Reset user password route
+  router.post('/reset-password', validate(resetPasswordSchema), resetPasswordController);
 
   // TODO: Logout user route
   // router.post('/logout', validate);
 
-  // TODO: Reset password
-  // router.post('/reset-password', validate);
-
   // TODO: Confirm account
   // router.post('/confirm-account', validate);
-
-  // TODO: New password
-  // router.post('/new-password', validate);
 };

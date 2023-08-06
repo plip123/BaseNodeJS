@@ -10,3 +10,10 @@ export interface IMail {
   html: string;
   attachments?: SendMailOptions["attachments"];
 };
+
+export interface IGenericEmailTemplate {
+  title: string;
+  message?: string;
+  textBtn?: string;
+  urlBtn?: string;
+};
