@@ -5,6 +5,8 @@ import {
   forgotPasswordController,
   resetPasswordController,
   verifyAccessTokenController,
+  confirmAccountController,
+  sendVerificationTokenController,
 } from '../../controllers/auth';
 import { validate } from '../middlewares';
 import {
@@ -13,6 +15,8 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
   verifyAccessTokenSchema,
+  confirmAccountSchema,
+  sendVerificationTokenSchema,
 } from '../../schemas/user';
 
 const router = Router();
@@ -26,6 +30,12 @@ export default (app: Router) => {
   // Login user route
   router.post('/login', validate(loginUserSchema), loginController);
   
+  // Send verification token
+  router.post('/send-code', validate(sendVerificationTokenSchema), sendVerificationTokenController);
+
+  // Verify account route
+  router.post('/confirm-account', validate(confirmAccountSchema), confirmAccountController);
+
   // Forgot password route
   router.post('/forgot-password', validate(forgotPasswordSchema), forgotPasswordController);
 
@@ -37,7 +47,4 @@ export default (app: Router) => {
 
   // TODO: Logout user route
   // router.post('/logout', validate);
-
-  // TODO: Confirm account
-  // router.post('/confirm-account', validate);
 };

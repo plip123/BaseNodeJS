@@ -7,13 +7,14 @@ import {
   ForgotPasswordInput,
   ResetPasswordInput,
   VerifyAccessTokenInput,
+  ConfirmAccountInput,
+  sendVerificationTokenInput,
 } from '../schemas/user';
 import {
   createUserService,
   findUserService,
   updateUserService,
-  signTokenService,
-  resetPasswordTokenService
+  createTokenService
 } from '../services/user';
 import Mailer from '../services/mailer';
 import EmailTemplates from '../templates/index';
@@ -87,7 +88,7 @@ export const loginController = async (
     }
 
     // Create Access Token
-    const { accessToken } = await signTokenService(user);
+    const { accessToken } = await createTokenService(user);
 
     logger.info("Access token created");
 
@@ -111,6 +112,88 @@ export const loginController = async (
   }
 };
 
+export const sendVerificationTokenController = async (
+  req: Request<{}, {}, sendVerificationTokenInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    if (user.active) {
+      return next(new AppError('Account is already activated', 402));
+    }
+
+    // Create Access Token
+    const { accessToken } = await createTokenService(user, 600000); // 10min
+    const url = `${req.headers['x-forwarded-proto'] ?? "http"}://${req.headers.host}/confirm-account/${accessToken}`;
+    
+    logger.info(`Url to send: ${url}`);
+
+    // Send forgot password email
+    const mailer = Mailer.getInstance();
+    const template = EmailTemplates.genericEmail({
+      title: "Confirm your account",
+      message: "Please click on the button below to confirm your account.",
+      textBtn: "Verify account",
+      urlBtn: url
+    });
+    await mailer.send(String(req.headers['X-Request-Id']), {
+        to: req.body.email,
+        subject: 'Confirm your account',
+        html: template.html,
+    });
+    
+    logger.info("Successful account activation");
+
+    // Send Access Token
+    res.status(200).json({
+      status: 'success',
+      data: {},
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while an account verification.");
+    next(err);
+  }
+};
+
+export const confirmAccountController = async (
+  req: Request<{}, {}, ConfirmAccountInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the user
+    const user = await findUserService({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError('Invalid Email', 401));
+    }
+
+    if (!verifyJwt(req.body.token)) {
+      return next(new AppError('Invalid Access Token', 401));
+    }
+
+    user.active = true;
+    await updateUserService(user);
+
+    logger.info("Successful account confirmation");
+
+    res.status(201).json({
+      status: 'success',
+      data: {},
+    });
+  } catch (err: any) {
+    logger.error("ERROR: An error occurred while verifying user account");
+    next(err);
+  }
+};
+
 export const forgotPasswordController = async (
   req: Request<{}, {}, ForgotPasswordInput>,
   res: Response,
@@ -125,7 +208,7 @@ export const forgotPasswordController = async (
     }
 
     // Create Access Token
-    const { accessToken } = await resetPasswordTokenService(user);
+    const { accessToken } = await createTokenService(user, 600000); // 10min
     const url = `${req.headers['x-forwarded-proto'] ?? "http"}://${req.headers.host}/recover-password/${accessToken}`;
     
     logger.info(`Url to send: ${url}`);

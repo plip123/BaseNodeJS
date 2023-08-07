@@ -39,6 +39,11 @@ export const deserializeUser = async (
       return next(new AppError(`User with that token no longer exist`, 401));
     }
 
+    // Check if account is active
+    if (!user.active) {
+      return next(new AppError(`Inactive account`, 401));
+    }
+
     res.locals.user = user;
 
     next();

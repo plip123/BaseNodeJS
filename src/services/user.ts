@@ -37,26 +37,15 @@ export const updateUserService = async (input: Partial<User>) => {
 };
 
 // Sign Token
-export const signTokenService = async (user: DocumentType<User>) => {
-  // Sign the access token
+export const createTokenService = async (
+  user: DocumentType<User>,
+  expiresIn?: string | number
+) => {
+  // Access token to create
   const accessToken = signJwt(
     { sub: user._id },
     {
-      expiresIn: `${config.get<number>('jwtConfig.jwtExpires')}h`,
-    }
-  );
-
-  // Return access token
-  return { accessToken };
-};
-
-// Reset Password Token
-export const resetPasswordTokenService = async (user: DocumentType<User>) => {
-  // Sign the access token
-  const accessToken = signJwt(
-    { sub: user._id },
-    {
-      expiresIn: 600000, // 10min
+      expiresIn: expiresIn ?? `${config.get<number>('jwtConfig.jwtExpires')}h`,
     }
   );
 
