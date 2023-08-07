@@ -28,6 +28,23 @@ export const loginUserSchema = object({
   }),
 });
 
+export const sendVerificationTokenSchema = object({
+  body: object({
+    email: string({ required_error: 'Email is required' }).email(
+      'Invalid Email'
+    ),
+  }),
+});
+
+export const confirmAccountSchema = object({
+  body: object({
+    email: string({ required_error: 'Email is required' }).email(
+      'Invalid Email'
+    ),
+    token: string({ required_error: 'Token is required' }),
+  }),
+});
+
 export const forgotPasswordSchema = object({
   body: object({
     email: string({ required_error: 'Email is required' }).email(
@@ -63,6 +80,8 @@ export const verifyAccessTokenSchema = object({
 
 export type RegisterUserInput = TypeOf<typeof registerUserSchema>['body'];
 export type LoginUserInput = TypeOf<typeof loginUserSchema>['body'];
+export type ConfirmAccountInput = TypeOf<typeof confirmAccountSchema>['body'];
 export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>['body'];
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>['body'];
+export type sendVerificationTokenInput = TypeOf<typeof sendVerificationTokenSchema>['body'];
 export type VerifyAccessTokenInput = TypeOf<typeof verifyAccessTokenSchema>['body'];
