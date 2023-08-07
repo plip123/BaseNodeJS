@@ -107,6 +107,101 @@ paths:
                                         type: string
                                         example: 'Invalid Email or Password'
 
+    /api/auth/send-code:
+        post:
+            tags:
+                - Auth
+            summary: Send Token.
+            description: Send token access to account verification.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+            responses:
+                '200':
+                    description: Sent email to verify account.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    data:
+                                        type: object
+                                        example: {}
+                '401':
+                    description: Failure to verify account.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Invalid Email'
+
+    /api/auth/confirm-account:
+        post:
+            tags:
+                - Auth
+            summary: Confirm Account
+            description: Receive a token access to active account.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+                                    example: 'bob@email.com'
+                                token:
+                                    type: string
+                                    example: '4CceS5T0k3n'
+            responses:
+                '200':
+                    description: Account actived.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: success
+                                    data:
+                                        type: object
+                                        example: {}
+                '401':
+                    description: Invalid Access Token.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: fail
+                                    message:
+                                        type: string
+                                        example: 'Invalid Access Token'
+
     /api/auth/forgot-password:
         post:
             tags:

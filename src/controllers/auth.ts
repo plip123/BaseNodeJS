@@ -125,6 +125,10 @@ export const sendVerificationTokenController = async (
       return next(new AppError('Invalid Email', 401));
     }
 
+    if (user.active) {
+      return next(new AppError('Account is already activated', 402));
+    }
+
     // Create Access Token
     const { accessToken } = await createTokenService(user, 600000); // 10min
     const url = `${req.headers['x-forwarded-proto'] ?? "http"}://${req.headers.host}/confirm-account/${accessToken}`;
